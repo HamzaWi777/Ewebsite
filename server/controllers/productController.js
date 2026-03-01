@@ -87,7 +87,12 @@ const parsedProducts = await Promise.all(products.map(async (p) => {
   try {
     if (p.images) {
       if (typeof p.images === 'string') {
-        images = JSON.parse(p.images);
+        try {
+          images = JSON.parse(p.images);
+        } catch (parseError) {
+          // If parsing fails, treat as single image path or empty
+          images = p.images.startsWith('/') || p.images.startsWith('http') ? [p.images] : [];
+        }
       } else {
         images = p.images;
       }
@@ -176,7 +181,17 @@ export async function getProductById(req, res) {
     let colors = [];
 
     try {
-      images = product.images ? (typeof product.images === 'string' ? JSON.parse(product.images) : product.images) : [];
+      if (product.images) {
+        if (typeof product.images === 'string') {
+          try {
+            images = JSON.parse(product.images);
+          } catch (parseError) {
+            images = product.images.startsWith('/') || product.images.startsWith('http') ? [product.images] : [];
+          }
+        } else {
+          images = product.images;
+        }
+      }
     } catch (e) {
       console.warn(`Invalid JSON in images for product ${id}`);
     }
