@@ -44,7 +44,3 @@ export async function uploadToCloudinary(fileBuffer, fileName) {
     uploadStream.end(fileBuffer);
   });
 }
-
-    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 10485760, // 10MB default
-  },
-});
