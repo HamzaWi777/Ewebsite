@@ -374,7 +374,22 @@ export async function updateProduct(req, res) {
       }
     }
 
-    let existingImages = products[0].images ? JSON.parse(products[0].images) : [];
+    let existingImages = [];
+    if (products[0].images) {
+      try {
+        if (typeof products[0].images === 'string') {
+          try {
+            existingImages = JSON.parse(products[0].images);
+          } catch (parseError) {
+            existingImages = products[0].images.startsWith('/') || products[0].images.startsWith('http') ? [products[0].images] : [];
+          }
+        } else {
+          existingImages = products[0].images;
+        }
+      } catch (e) {
+        existingImages = [];
+      }
+    }
     
     // Add new uploaded images to Cloudinary
     if (req.files && req.files.length > 0) {
