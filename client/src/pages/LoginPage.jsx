@@ -90,7 +90,6 @@ export function LoginPage() {
         </p>
 
         <div className="mt-6 p-4 bg-blue-50 rounded text-sm text-blue-800">
-          <p>Demo Admin: admin@store.com / admin123</p>
         </div>
       </div>
     </div>
