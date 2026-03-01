@@ -36,7 +36,7 @@ export function HomePage() {
       {/* Hero Banner */}
       <section className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-20">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-4">Welcome to StyleStore</h1>
+          <h1 className="text-5xl font-bold mb-4">Welcome to MH</h1>
           <p className="text-xl text-gray-300 mb-8">
             Discover the latest fashion trends and premium clothing
           </p>
