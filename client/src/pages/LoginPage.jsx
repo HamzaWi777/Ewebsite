@@ -88,9 +88,6 @@ export function LoginPage() {
             Register
           </button>
         </p>
-
-        <div className="mt-6 p-4 bg-blue-50 rounded text-sm text-blue-800">
-        </div>
       </div>
     </div>
   );
