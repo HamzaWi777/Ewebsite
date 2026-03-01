@@ -1,0 +1,405 @@
+import pool from '../config/database.js';
+
+export async function getAllProducts(req, res) {
+  try {
+    console.log('📥 Received query params:', req.query); // ADD THIS
+
+    const { category, minPrice, maxPrice, search, sort, page = 1, limit = 12 } = req.query;
+    const offset = (page - 1) * limit;
+
+    let query = 'SELECT * FROM products WHERE 1=1';
+    const params = [];
+
+    if (category && category !== 'all') {
+      query += ' AND category = ?';
+      params.push(category);
+    }
+
+    if (minPrice) {
+      query += ' AND price >= ?';
+      params.push(minPrice);
+    }
+
+    if (maxPrice) {
+      query += ' AND price <= ?';
+      params.push(maxPrice);
+    }
+
+    if (search) {
+      query += ' AND (name LIKE ? OR description LIKE ?)';
+      const searchTerm = `%${search}%`;
+      params.push(searchTerm, searchTerm);
+    }
+
+    // Add sorting
+    if (sort === 'price_asc') {
+      query += ' ORDER BY price ASC';
+    } else if (sort === 'price_desc') {
+      query += ' ORDER BY price DESC';
+    } else {
+      query += ' ORDER BY created_at DESC';
+    }
+
+    query += ' LIMIT ? OFFSET ?';
+    params.push(parseInt(limit), offset);
+
+    console.log('🔍 Final SQL query:', query); // ADD THIS
+    console.log('📊 Query params:', params); // ADD THIS
+
+    const [products] = await pool.query(query, params);
+
+    console.log('✅ Products fetched:', products.length); // ADD THIS
+
+    // Get total count
+    let countQuery = 'SELECT COUNT(*) as total FROM products WHERE 1=1';
+    const countParams = [];
+
+    if (category && category !== 'all') {
+      countQuery += ' AND category = ?';
+      countParams.push(category);
+    }
+    if (minPrice) {
+      countQuery += ' AND price >= ?';
+      countParams.push(minPrice);
+    }
+    if (maxPrice) {
+      countQuery += ' AND price <= ?';
+      countParams.push(maxPrice);
+    }
+    if (search) {
+      countQuery += ' AND (name LIKE ? OR description LIKE ?)';
+      const searchTerm = `%${search}%`;
+      countParams.push(searchTerm, searchTerm);
+    }
+
+    const [countResult] = await pool.query(countQuery, countParams);
+    const total = countResult[0].total;
+
+   // Parse JSON fields with error handling and fetch variants
+// Parse JSON fields with error handling
+const parsedProducts = await Promise.all(products.map(async (p) => {
+  let images = [];
+  let sizes = [];
+  let colors = [];
+
+  // Safe JSON parsing for images
+  try {
+    if (p.images) {
+      if (typeof p.images === 'string') {
+        images = JSON.parse(p.images);
+      } else {
+        images = p.images;
+      }
+    }
+  } catch (e) {
+    console.warn(`Invalid JSON in images for product ${p.id}:`, p.images);
+    images = [];
+  }
+
+  // Safe JSON parsing for sizes
+  try {
+    if (p.sizes) {
+      if (typeof p.sizes === 'string') {
+        sizes = JSON.parse(p.sizes);
+      } else {
+        sizes = p.sizes;
+      }
+    }
+  } catch (e) {
+    console.warn(`Invalid JSON in sizes for product ${p.id}:`, p.sizes);
+    sizes = [];
+  }
+
+  // Safe JSON parsing for colors
+  try {
+    if (p.colors) {
+      if (typeof p.colors === 'string') {
+        colors = JSON.parse(p.colors);
+      } else {
+        colors = p.colors;
+      }
+    }
+  } catch (e) {
+    console.warn(`Invalid JSON in colors for product ${p.id}:`, p.colors);
+    colors = [];
+  }
+
+  // Fetch variants for this product
+  const [variants] = await pool.query('SELECT * FROM product_variants WHERE product_id = ?', [p.id]);
+  const variantStock = {};
+  variants.forEach(v => {
+    const key = `${v.size || 'none'}_${v.color || 'none'}`;
+    variantStock[key] = v.stock;
+  });
+
+  return {
+    ...p,
+    price: parseFloat(p.price),  // ✅ ADD THIS - Convert string to number
+    images,
+    sizes,
+    colors,
+    variants: variantStock,
+  };
+}));
+
+    res.json({
+      products: parsedProducts,
+      pagination: {
+        total,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        pages: Math.ceil(total / limit),
+      },
+    });
+  } catch (error) {
+    console.error('❌ Error in getAllProducts:', error); // ADD THIS
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export async function getProductById(req, res) {
+  try {
+    const { id } = req.params;
+
+    const [products] = await pool.query('SELECT * FROM products WHERE id = ?', [id]);
+
+    if (products.length === 0) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    const product = products[0];
+    
+    // Safe JSON parsing
+    let images = [];
+    let sizes = [];
+    let colors = [];
+
+    try {
+      images = product.images ? (typeof product.images === 'string' ? JSON.parse(product.images) : product.images) : [];
+    } catch (e) {
+      console.warn(`Invalid JSON in images for product ${id}`);
+    }
+
+    try {
+      sizes = product.sizes ? (typeof product.sizes === 'string' ? JSON.parse(product.sizes) : product.sizes) : [];
+    } catch (e) {
+      console.warn(`Invalid JSON in sizes for product ${id}`);
+    }
+
+    try {
+      colors = product.colors ? (typeof product.colors === 'string' ? JSON.parse(product.colors) : product.colors) : [];
+    } catch (e) {
+      console.warn(`Invalid JSON in colors for product ${id}`);
+    }
+
+    // Fetch variants for this product
+    const [variants] = await pool.query('SELECT * FROM product_variants WHERE product_id = ?', [id]);
+    const variantStock = {};
+    variants.forEach(v => {
+      const key = `${v.size || 'none'}_${v.color || 'none'}`;
+      variantStock[key] = v.stock;
+    });
+
+    res.json({
+      ...product,
+      price: parseFloat(product.price),  // ✅ ADD THIS
+      images,
+      sizes,
+      colors,
+      variants: variantStock,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export async function createProduct(req, res) {
+  try {
+    const { name, description, price, category, sizes, colors, variantStock } = req.body;
+
+    // Parse variantStock if it's a JSON string
+    let parsedVariantStock = {};
+    if (variantStock) {
+      try {
+        parsedVariantStock = typeof variantStock === 'string' ? JSON.parse(variantStock) : variantStock;
+      } catch (e) {
+        console.error('Error parsing variantStock:', e);
+        parsedVariantStock = {};
+      }
+    }
+
+    // Get uploaded file paths
+    const images = req.files ? req.files.map(f => `/uploads/${f.filename}`) : [];
+
+    // Parse colors if it's a JSON string
+    let parsedColors = [];
+    if (colors) {
+      try {
+        parsedColors = typeof colors === 'string' ? JSON.parse(colors) : colors;
+      } catch (e) {
+        parsedColors = [];
+      }
+    }
+
+    // Parse sizes if it's a JSON string
+    let parsedSizes = ['S', 'M', 'L', 'XL'];
+    if (sizes) {
+      try {
+        parsedSizes = typeof sizes === 'string' ? JSON.parse(sizes) : sizes;
+      } catch (e) {
+        parsedSizes = ['S', 'M', 'L', 'XL'];
+      }
+    }
+
+    // Calculate total stock from variants
+    let totalStock = 0;
+    if (parsedVariantStock && typeof parsedVariantStock === 'object') {
+      totalStock = Object.values(parsedVariantStock).reduce((sum, stock) => sum + (parseInt(stock) || 0), 0);
+    }
+
+    const [result] = await pool.query(
+      'INSERT INTO products (name, description, price, category, stock, images, sizes, colors) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        name,
+        description,
+        price,
+        category,
+        totalStock,
+        JSON.stringify(images),
+        JSON.stringify(parsedSizes),
+        JSON.stringify(parsedColors),
+      ]
+    );
+
+    const productId = result.insertId;
+
+    // Create product variants with individual stock levels
+    if (parsedVariantStock && typeof parsedVariantStock === 'object') {
+      for (const [key, stock] of Object.entries(parsedVariantStock)) {
+        const [size, color] = key.split('_');
+        await pool.query(
+          'INSERT INTO product_variants (product_id, size, color, stock) VALUES (?, ?, ?, ?)',
+          [productId, size || null, color || null, parseInt(stock) || 0]
+        );
+      }
+    }
+
+    res.status(201).json({
+      message: 'Product created successfully',
+      id: productId,
+    });
+  } catch (error) {
+    console.error('Error creating product:', error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export async function updateProduct(req, res) {
+  try {
+    const { id } = req.params;
+    const { name, description, price, category, sizes, colors, variantStock } = req.body;
+
+    // Check if product exists
+    const [products] = await pool.query('SELECT * FROM products WHERE id = ?', [id]);
+    if (products.length === 0) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    // Parse variantStock if it's a JSON string
+    let parsedVariantStock = {};
+    if (variantStock) {
+      try {
+        parsedVariantStock = typeof variantStock === 'string' ? JSON.parse(variantStock) : variantStock;
+      } catch (e) {
+        console.error('Error parsing variantStock:', e);
+        parsedVariantStock = {};
+      }
+    }
+
+    // Parse colors if it's a JSON string
+    let parsedColors = [];
+    if (colors) {
+      try {
+        parsedColors = typeof colors === 'string' ? JSON.parse(colors) : colors;
+      } catch (e) {
+        parsedColors = [];
+      }
+    }
+
+    // Parse sizes if it's a JSON string
+    let parsedSizes = ['S', 'M', 'L', 'XL'];
+    if (sizes) {
+      try {
+        parsedSizes = typeof sizes === 'string' ? JSON.parse(sizes) : sizes;
+      } catch (e) {
+        parsedSizes = ['S', 'M', 'L', 'XL'];
+      }
+    }
+
+    let existingImages = products[0].images ? JSON.parse(products[0].images) : [];
+    
+    // Add new uploaded images
+    if (req.files && req.files.length > 0) {
+      const newImages = req.files.map(f => `/uploads/${f.filename}`);
+      existingImages = [...existingImages, ...newImages];
+    }
+
+    // Calculate total stock from variants
+    let totalStock = 0;
+    if (parsedVariantStock && typeof parsedVariantStock === 'object') {
+      totalStock = Object.values(parsedVariantStock).reduce((sum, stock) => sum + (parseInt(stock) || 0), 0);
+    }
+
+    await pool.query(
+      'UPDATE products SET name = ?, description = ?, price = ?, category = ?, stock = ?, images = ?, sizes = ?, colors = ? WHERE id = ?',
+      [
+        name,
+        description,
+        price,
+        category,
+        totalStock,
+        JSON.stringify(existingImages),
+        JSON.stringify(parsedSizes),
+        JSON.stringify(parsedColors),
+        id,
+      ]
+    );
+
+    // Update product variants with individual stock levels
+    // First, delete existing variants
+    await pool.query('DELETE FROM product_variants WHERE product_id = ?', [id]);
+    
+    // Then create new variants
+    if (parsedVariantStock && typeof parsedVariantStock === 'object') {
+      for (const [key, stock] of Object.entries(parsedVariantStock)) {
+        const [size, color] = key.split('_');
+        await pool.query(
+          'INSERT INTO product_variants (product_id, size, color, stock) VALUES (?, ?, ?, ?)',
+          [id, size || null, color || null, parseInt(stock) || 0]
+        );
+      }
+    }
+
+    res.json({ message: 'Product updated successfully' });
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export async function deleteProduct(req, res) {
+  try {
+    const { id } = req.params;
+
+    const [products] = await pool.query('SELECT * FROM products WHERE id = ?', [id]);
+    if (products.length === 0) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    await pool.query('DELETE FROM products WHERE id = ?', [id]);
+
+    res.json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
