@@ -101,7 +101,7 @@ export function ProductDetailPage() {
           {product.images.length > 0 ? (
             <>
               <img
-                src={`http://localhost:5000${product.images[currentImageIndex]}`}
+                src={product.images[currentImageIndex].startsWith('http') ? product.images[currentImageIndex] : `http://localhost:5000${product.images[currentImageIndex]}`}
                 alt={product.name}
                 className="w-full h-96 object-cover rounded-lg mb-4"
               />
@@ -110,7 +110,7 @@ export function ProductDetailPage() {
                   {product.images.map((img, idx) => (
                     <img
                       key={idx}
-                      src={`http://localhost:5000${img}`}
+                      src={img.startsWith('http') ? img : `http://localhost:5000${img}`}
                       alt={`thumbnail-${idx}`}
                       onClick={() => setCurrentImageIndex(idx)}
                       className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${

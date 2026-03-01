@@ -153,7 +153,7 @@ export function ProductsPage() {
                   >
                     {product.images[0] && (
                       <img
-                        src={`http://localhost:5000${product.images[0]}`}
+                        src={product.images[0].startsWith('http') ? product.images[0] : `http://localhost:5000${product.images[0]}`}
                         alt={product.name}
                         className="w-full h-64 object-cover"
                       />
