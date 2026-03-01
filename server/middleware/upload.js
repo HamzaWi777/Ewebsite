@@ -1,19 +1,14 @@
 import multer from 'multer';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import cloudinary from 'cloudinary';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const uploadDir = path.join(__dirname, '../uploads');
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  },
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+// Use memory storage instead of disk
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
   const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -28,6 +23,28 @@ export const uploadMiddleware = multer({
   storage,
   fileFilter,
   limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB
+  },
+});
+
+// Helper function to upload to Cloudinary
+export async function uploadToCloudinary(fileBuffer, fileName) {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.v2.uploader.upload_stream(
+      {
+        folder: 'ecommerce-products',
+        resource_type: 'auto',
+      },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result.secure_url);
+      }
+    );
+
+    uploadStream.end(fileBuffer);
+  });
+}
+
     fileSize: parseInt(process.env.MAX_FILE_SIZE) || 10485760, // 10MB default
   },
 });

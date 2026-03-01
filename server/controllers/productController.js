@@ -1,4 +1,5 @@
 import pool from '../config/database.js';
+import cloudinary from '../config/cloudinary.js';
 
 export async function getAllProducts(req, res) {
   try {
@@ -228,8 +229,30 @@ export async function createProduct(req, res) {
       }
     }
 
-    // Get uploaded file paths
-    const images = req.files ? req.files.map(f => `/uploads/${f.filename}`) : [];
+    // Upload images to Cloudinary
+    let images = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const uploadToCloudinary = (fileBuffer) => {
+          return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                folder: 'ecommerce-products',
+                resource_type: 'auto',
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result.secure_url);
+              }
+            );
+            uploadStream.end(fileBuffer);
+          });
+        };
+        
+        const imageUrl = await uploadToCloudinary(file.buffer);
+        images.push(imageUrl);
+      }
+    }
 
     // Parse colors if it's a JSON string
     let parsedColors = [];
@@ -338,10 +361,28 @@ export async function updateProduct(req, res) {
 
     let existingImages = products[0].images ? JSON.parse(products[0].images) : [];
     
-    // Add new uploaded images
+    // Add new uploaded images to Cloudinary
     if (req.files && req.files.length > 0) {
-      const newImages = req.files.map(f => `/uploads/${f.filename}`);
-      existingImages = [...existingImages, ...newImages];
+      for (const file of req.files) {
+        const uploadToCloudinary = (fileBuffer) => {
+          return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                folder: 'ecommerce-products',
+                resource_type: 'auto',
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result.secure_url);
+              }
+            );
+            uploadStream.end(fileBuffer);
+          });
+        };
+        
+        const imageUrl = await uploadToCloudinary(file.buffer);
+        existingImages.push(imageUrl);
+      }
     }
 
     // Calculate total stock from variants
