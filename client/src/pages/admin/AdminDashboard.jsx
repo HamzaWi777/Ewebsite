@@ -99,7 +99,7 @@ export function AdminDashboard() {
                 {recentOrders.map(order => (
                   <tr key={order.id} className="border-b border-gray-200 hover:bg-gray-50">
                     <td className="py-2 px-4 font-semibold">#{order.id}</td>
-                    <td className="py-2 px-4">{order.full_name}</td>
+                    <td className="py-2 px-4">{order.customerName}</td>
                     <td className="py-2 px-4">${(parseFloat(order.total_price) || 0).toFixed(2)}</td>
                     <td className="py-2 px-4">
                       <span className={`px-3 py-1 rounded text-sm font-semibold ${getStatusColor(order.status)}`}>
