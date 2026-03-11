@@ -100,7 +100,7 @@ export function AdminOrders() {
                     >
                       <td className="py-3 px-4 font-semibold">#{order.id}</td>
                       <td className="py-3 px-4">{order.customerName}</td>
-                      <td className="py-3 px-4">TND{(parseFloat(order.total_price) || 0).toFixed(2)}</td>
+                      <td className="py-3 px-4">TND {(parseFloat(order.total_price) || 0).toFixed(2)}</td>
                       <td className="py-3 px-4">
                         <span className={`px-3 py-1 rounded text-sm font-semibold ${getStatusColor(order.status)}`}>
                           {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
@@ -135,7 +135,7 @@ export function AdminOrders() {
                 <div>
                   <p className="text-gray-600 text-sm">Total Amount</p>
                   <p className="font-semibold text-lg">
-                    TND{(parseFloat(selectedOrder.total_price) || 0).toFixed(2)}
+                    TND {(parseFloat(selectedOrder.total_price) || 0).toFixed(2)}
                   </p>
                 </div>
                 <div>
@@ -153,7 +153,7 @@ export function AdminOrders() {
                     {selectedOrder.items?.map((item, idx) => (
                       <div key={idx} className="text-sm bg-gray-50 p-2 rounded">
                         <p className="font-semibold">{item.name}</p>
-                        <p className="text-gray-600">Qty: {item.quantity} × TND{parseFloat(item.price).toFixed(2)}</p>
+                        <p className="text-gray-600">Qty: {item.quantity} × TND {parseFloat(item.price).toFixed(2)}</p>
                         {(item.size || item.color) && (
                           <p className="text-gray-500 text-xs">
                             {item.size && `Size: ${item.size}`} {item.color && `Color: ${item.color}`}

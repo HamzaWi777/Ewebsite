@@ -73,7 +73,7 @@ export function AdminDashboard() {
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-gray-600 text-sm font-semibold mb-2">Total Revenue</h3>
           <p className="text-3xl font-bold text-green-600">
-            TND{typeof stats.totalRevenue === 'number' ? stats.totalRevenue.toFixed(2) : (parseFloat(stats.totalRevenue) || 0).toFixed(2)}
+            TND {typeof stats.totalRevenue === 'number' ? stats.totalRevenue.toFixed(2) : (parseFloat(stats.totalRevenue) || 0).toFixed(2)}
           </p>
         </div>
       </div>
@@ -100,7 +100,7 @@ export function AdminDashboard() {
                   <tr key={order.id} className="border-b border-gray-200 hover:bg-gray-50">
                     <td className="py-2 px-4 font-semibold">#{order.id}</td>
                     <td className="py-2 px-4">{order.customerName}</td>
-                    <td className="py-2 px-4">TND{(parseFloat(order.total_price) || 0).toFixed(2)}</td>
+                    <td className="py-2 px-4">TND {(parseFloat(order.total_price) || 0).toFixed(2)}</td>
                     <td className="py-2 px-4">
                       <span className={`px-3 py-1 rounded text-sm font-semibold ${getStatusColor(order.status)}`}>
                         {order.status.charAt(0).toUpperCase() + order.status.slice(1)}

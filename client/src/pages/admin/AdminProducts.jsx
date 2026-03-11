@@ -339,7 +339,7 @@ export function AdminProducts() {
                 <tr key={product.id} className="border-b border-gray-200 hover:bg-gray-50">
                   <td className="py-3 px-4 font-semibold">{product.name}</td>
                   <td className="py-3 px-4">{product.category}</td>
-                  <td className="py-3 px-4">TND{product.price.toFixed(2)}</td>
+                  <td className="py-3 px-4">TND {product.price.toFixed(2)}</td>
                   <td className="py-3 px-4">
                     <span className={product.stock > 0 ? 'text-green-600' : 'text-red-600'}>
                       {product.stock}

@@ -118,7 +118,7 @@ export function CartPage() {
                       Size: {item.size} | Color: {item.color}
                     </p>
                     <p className="text-lg font-bold mt-2">
-                      TND{(typeof item.price === 'string' ? parseFloat(item.price) : item.price).toFixed(2)}
+                      TND {(typeof item.price === 'string' ? parseFloat(item.price) : item.price).toFixed(2)}
                     </p>
 
                     <div className="flex items-center gap-4 mt-4">
@@ -155,7 +155,7 @@ export function CartPage() {
 
                   <div className="text-right">
                     <p className="text-lg font-bold">
-                      TND{((typeof item.price === 'string' ? parseFloat(item.price) : item.price) * item.quantity).toFixed(2)}
+                      TND {((typeof item.price === 'string' ? parseFloat(item.price) : item.price) * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -171,7 +171,7 @@ export function CartPage() {
               <div className="space-y-2 mb-4 pb-4 border-b border-gray-200">
                 <div className="flex justify-between">
                   <span>Subtotal:</span>
-                  <span>TND{totalPrice.toFixed(2)}</span>
+                  <span>TND {totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping:</span>
@@ -181,7 +181,7 @@ export function CartPage() {
 
               <div className="flex justify-between text-xl font-bold mb-6">
                 <span>Total:</span>
-                <span>TND{totalPrice.toFixed(2)}</span>
+                <span>TND {totalPrice.toFixed(2)}</span>
               </div>
 
               <button

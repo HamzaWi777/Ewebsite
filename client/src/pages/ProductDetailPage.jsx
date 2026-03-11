@@ -134,7 +134,7 @@ export function ProductDetailPage() {
           <p className="text-gray-600 mb-6 whitespace-pre-wrap">{product.description}</p>
 
           <div className="mb-6">
-            <span className="text-3xl font-bold mr-4">TND{product.price.toFixed(2)}</span>
+            <span className="text-3xl font-bold mr-4">TND {product.price.toFixed(2)}</span>
             <span className={`text-lg ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
               {product.stock > 0 ? `${product.stock} total in stock` : 'Out of stock'}
             </span>

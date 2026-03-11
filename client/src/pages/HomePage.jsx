@@ -96,7 +96,7 @@ export function HomePage() {
                     </p>
                     <div className="flex justify-between items-center">
                       <span className="text-xl font-bold">
-                        TND{product.price.toFixed(2)}
+                        TND {product.price.toFixed(2)}
                       </span>
                       <span className="text-sm px-3 py-1 bg-gray-100 rounded">
                         {product.stock > 0 ? 'In Stock' : 'Out of Stock'}

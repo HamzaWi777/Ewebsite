@@ -165,7 +165,7 @@ export function ProductsPage() {
                       </p>
                       <div className="flex justify-between items-center">
                         <span className="text-xl font-bold">
-                          TND{product.price.toFixed(2)}
+                          TND {product.price.toFixed(2)}
                         </span>
                         <span className={`text-sm ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
                           {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
