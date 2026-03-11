@@ -86,7 +86,7 @@ export function HomePage() {
                     <img
                       src={product.images[0].startsWith('http') ? product.images[0] : `http://localhost:5000${product.images[0]}`}
                       alt={product.name}
-                      className="w-full h-64 object-cover"
+                      className="w-full h-[450px] object-cover"
                     />
                   )}
                   <div className="p-4">
