@@ -103,7 +103,7 @@ export function ProductDetailPage() {
               <img
                 src={product.images[currentImageIndex].startsWith('http') ? product.images[currentImageIndex] : `http://localhost:5000${product.images[currentImageIndex]}`}
                 alt={product.name}
-                className="w-full h-96 object-cover rounded-lg mb-4"
+                className="w-full h-[600px] object-cover rounded-lg mb-4"
               />
               {product.images.length > 1 && (
                 <div className="flex gap-2">
@@ -113,7 +113,7 @@ export function ProductDetailPage() {
                       src={img.startsWith('http') ? img : `http://localhost:5000${img}`}
                       alt={`thumbnail-${idx}`}
                       onClick={() => setCurrentImageIndex(idx)}
-                      className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${
+                      className={`w-20 h-28 object-cover rounded cursor-pointer border-2 ${
                         currentImageIndex === idx ? 'border-gray-900' : 'border-gray-300'
                       }`}
                     />
