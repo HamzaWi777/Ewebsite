@@ -103,7 +103,7 @@ export function ProductDetailPage() {
               <img
                 src={product.images[currentImageIndex].startsWith('http') ? product.images[currentImageIndex] : `http://localhost:5000${product.images[currentImageIndex]}`}
                 alt={product.name}
-                className="w-full h-full object-cover rounded-lg mb-4"
+                className="w-full h-[750px] object-cover rounded-lg mb-4"
               />
               {product.images.length > 1 && (
                 <div className="flex gap-2">
