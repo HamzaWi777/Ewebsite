@@ -249,7 +249,11 @@ export function ProductDetailPage() {
             {currentVariantStock === 0 ? 'Out of Stock' : 'Add to Cart'}
           </button>
 
-          
+          {product.is_featured && (
+            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-yellow-800 text-sm">
+              
+            </div>
+          )}
         </div>
       </div>
     </div>
