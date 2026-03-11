@@ -134,7 +134,7 @@ function CheckoutPageContent() {
                     </p>
                   </div>
                   <p className="text-right">
-                    ${((typeof item.price === 'string' ? parseFloat(item.price) : item.price) * item.quantity).toFixed(2)}
+                    TND{((typeof item.price === 'string' ? parseFloat(item.price) : item.price) * item.quantity).toFixed(2)}
                   </p>
                 </div>
               ))}
@@ -143,7 +143,7 @@ function CheckoutPageContent() {
             <div className="space-y-2 mt-6">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
-                <span>${totalPrice.toFixed(2)}</span>
+                <span>TND{totalPrice.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping:</span>
@@ -151,7 +151,7 @@ function CheckoutPageContent() {
               </div>
               <div className="flex justify-between text-xl font-bold pt-2 border-t border-gray-200">
                 <span>Total:</span>
-                <span>${totalPrice.toFixed(2)}</span>
+                <span>TND{totalPrice.toFixed(2)}</span>
               </div>
             </div>
           </div>

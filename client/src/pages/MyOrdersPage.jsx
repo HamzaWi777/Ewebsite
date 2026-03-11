@@ -93,7 +93,7 @@ function MyOrdersPageContent() {
                       {new Date(order.created_at).toLocaleDateString()}
                     </p>
                     <p className={`text-sm font-semibold mt-2 ${selectedOrder?.id === order.id ? '' : 'text-gray-600'}`}>
-                      ${(parseFloat(order.total_price) || 0).toFixed(2)}
+                      TND{(parseFloat(order.total_price) || 0).toFixed(2)}
                     </p>
                   </button>
                 ))}
@@ -156,10 +156,10 @@ function MyOrdersPageContent() {
                         </div>
                         <div className="text-right">
                           <p className="font-semibold">
-                            ${(parseFloat(item.price) || 0).toFixed(2)} each
+                            TND{(parseFloat(item.price) || 0).toFixed(2)} each
                           </p>
                           <p className="text-gray-600">
-                            Subtotal: ${((parseFloat(item.price) || 0) * item.quantity).toFixed(2)}
+                            Subtotal: TND{((parseFloat(item.price) || 0) * item.quantity).toFixed(2)}
                           </p>
                         </div>
                       </div>
@@ -169,7 +169,7 @@ function MyOrdersPageContent() {
                   <div className="border-t-2 border-gray-200 pt-4">
                     <div className="flex justify-between text-xl font-bold">
                       <span>Total:</span>
-                      <span>${(parseFloat(selectedOrder.total_price) || 0).toFixed(2)}</span>
+                      <span>TND{(parseFloat(selectedOrder.total_price) || 0).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
