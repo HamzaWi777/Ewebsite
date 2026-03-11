@@ -131,7 +131,7 @@ export function ProductDetailPage() {
         {/* Product Info */}
         <div>
           <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
-          <p className="text-gray-600 mb-6">{product.description}</p>
+          <p className="text-gray-600 mb-6 whitespace-pre-wrap">{product.description}</p>
 
           <div className="mb-6">
             <span className="text-3xl font-bold mr-4">${product.price.toFixed(2)}</span>
