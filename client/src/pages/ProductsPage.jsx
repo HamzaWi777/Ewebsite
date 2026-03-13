@@ -18,6 +18,13 @@ export function ProductsPage() {
   });
 
   const categories = ['all', 'men', 'women', 'accessories', 'shoes'];
+  const categoryLabels = {
+    all: 'Tous',
+    men: 'Hommes',
+    women: 'Femmes',
+    accessories: 'Accessoires',
+    shoes: 'Chaussures',
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -40,7 +47,7 @@ export function ProductsPage() {
       setProducts(response.data.products);
       setPagination(response.data.pagination);
     } catch (error) {
-      toast.error('Failed to load products');
+      toast.error('Échec du chargement des produits');
     } finally {
       setLoading(false);
     }
@@ -66,15 +73,15 @@ export function ProductsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Our Products</h1>
+      <h1 className="text-3xl font-bold mb-8">Nos produits</h1>
 
       <div className="flex gap-8">
-        {/* Filters Sidebar */}
+        {/* Barre latérale des filtres */}
         <aside className="w-64 flex-shrink-0">
           <div className="bg-white p-6 rounded-lg shadow">
-            {/* Category Filter */}
+            {/* Filtre par catégorie */}
             <div className="mb-6">
-              <h3 className="font-semibold mb-3">Category</h3>
+              <h3 className="font-semibold mb-3">Catégorie</h3>
               <select
                 value={filters.category}
                 onChange={(e) => handleFilterChange('category', e.target.value)}
@@ -82,15 +89,15 @@ export function ProductsPage() {
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    {categoryLabels[cat]}
                   </option>
                 ))}
               </select>
             </div>
 
-            {/* Price Filter */}
+            {/* Filtre par prix */}
             <div className="mb-6">
-              <h3 className="font-semibold mb-3">Price Range</h3>
+              <h3 className="font-semibold mb-3">Fourchette de prix</h3>
               <div className="flex flex-col gap-2">
                 <input
                   type="number"
@@ -109,29 +116,29 @@ export function ProductsPage() {
               </div>
             </div>
 
-            {/* Sort */}
+            {/* Tri */}
             <div className="mb-6">
-              <h3 className="font-semibold mb-3">Sort By</h3>
+              <h3 className="font-semibold mb-3">Trier par</h3>
               <select
                 value={filters.sort}
                 onChange={(e) => handleFilterChange('sort', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               >
-                <option value="newest">Newest</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
+                <option value="newest">Plus récents</option>
+                <option value="price_asc">Prix croissant</option>
+                <option value="price_desc">Prix décroissant</option>
               </select>
             </div>
           </div>
         </aside>
 
-        {/* Products Grid */}
+        {/* Grille de produits */}
         <main className="flex-1">
-          {/* Search Bar */}
+          {/* Barre de recherche */}
           <div className="mb-6">
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder="Rechercher des produits..."
               value={filters.search}
               onChange={(e) => handleFilterChange('search', e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
@@ -139,9 +146,9 @@ export function ProductsPage() {
           </div>
 
           {loading ? (
-            <div className="text-center py-12">Loading...</div>
+            <div className="text-center py-12">Chargement...</div>
           ) : products.length === 0 ? (
-            <div className="text-center py-12">No products found</div>
+            <div className="text-center py-12">Aucun produit trouvé</div>
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -168,7 +175,7 @@ export function ProductsPage() {
                           TND {product.price.toFixed(2)}
                         </span>
                         <span className={`text-sm ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                          {product.stock > 0 ? 'En stock' : 'Rupture de stock'}
                         </span>
                       </div>
                     </div>

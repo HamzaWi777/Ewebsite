@@ -31,7 +31,7 @@ export function CartPage() {
         setCartItems(response.data);
       }
     } catch (error) {
-      toast.error('Failed to load cart');
+      toast.error('Échec du chargement du panier');
     } finally {
       setLoading(false);
     }
@@ -50,9 +50,9 @@ export function CartPage() {
           item.id === itemId ? { ...item, quantity: newQuantity } : item
         ));
       }
-      toast.success('Cart updated');
+      toast.success('Panier mis à jour');
     } catch (error) {
-      toast.error('Failed to update cart');
+      toast.error('Échec de la mise à jour du panier');
     }
   };
 
@@ -65,9 +65,9 @@ export function CartPage() {
         await cartService.removeFromCart(itemId);
         setCartItems(cartItems.filter(item => item.id !== itemId));
       }
-      toast.success('Item removed from cart');
+      toast.success('Article retiré du panier');
     } catch (error) {
-      toast.error('Failed to remove item');
+      toast.error("Échec de la suppression de l'article");
     }
   };
 
@@ -77,26 +77,26 @@ export function CartPage() {
   }, 0);
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    return <div className="flex items-center justify-center min-h-screen">Chargement...</div>;
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
+      <h1 className="text-3xl font-bold mb-8">Panier</h1>
 
       {cartItems.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-600 mb-4">Your cart is empty</p>
+          <p className="text-gray-600 mb-4">Votre panier est vide</p>
           <button
             onClick={() => navigate('/products')}
             className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800 transition"
           >
-            Continue Shopping
+            Continuer les achats
           </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
+          {/* Articles du panier */}
           <div className="lg:col-span-2">
             <div className="space-y-4">
               {cartItems.map(item => (
@@ -106,7 +106,7 @@ export function CartPage() {
                 >
                   {item.images[0] && (
                     <img
-                      src={`http://localhost:5000${item.images[0]}`}
+                      src={item.images[0].startsWith('http') ? item.images[0] : `http://localhost:5000${item.images[0]}`}
                       alt={item.name}
                       className="w-24 h-24 object-cover rounded"
                     />
@@ -115,7 +115,7 @@ export function CartPage() {
                   <div className="flex-1">
                     <h3 className="font-semibold text-lg">{item.name}</h3>
                     <p className="text-sm text-gray-600">
-                      Size: {item.size} | Color: {item.color}
+                      Taille : {item.size} | Couleur : {item.color}
                     </p>
                     <p className="text-lg font-bold mt-2">
                       TND {(typeof item.price === 'string' ? parseFloat(item.price) : item.price).toFixed(2)}
@@ -148,7 +148,7 @@ export function CartPage() {
                         onClick={() => handleRemoveItem(item.id)}
                         className="text-red-600 hover:text-red-800 font-semibold ml-auto"
                       >
-                        Remove
+                        Supprimer
                       </button>
                     </div>
                   </div>
@@ -163,24 +163,24 @@ export function CartPage() {
             </div>
           </div>
 
-          {/* Order Summary */}
+          {/* Récapitulatif de commande */}
           <div className="lg:col-span-1">
             <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+              <h2 className="text-xl font-bold mb-4">Récapitulatif</h2>
 
               <div className="space-y-2 mb-4 pb-4 border-b border-gray-200">
                 <div className="flex justify-between">
-                  <span>Subtotal:</span>
+                  <span>Sous-total :</span>
                   <span>TND {totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Shipping:</span>
-                  <span className="text-green-600">FREE</span>
+                  <span>Livraison :</span>
+                  <span className="text-green-600">GRATUITE</span>
                 </div>
               </div>
 
               <div className="flex justify-between text-xl font-bold mb-6">
-                <span>Total:</span>
+                <span>Total :</span>
                 <span>TND {totalPrice.toFixed(2)}</span>
               </div>
 
@@ -188,14 +188,14 @@ export function CartPage() {
                 onClick={() => navigate('/checkout')}
                 className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition font-semibold"
               >
-                Proceed to Checkout
+                Passer la commande
               </button>
 
               <button
                 onClick={() => navigate('/products')}
                 className="w-full mt-2 border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition"
               >
-                Continue Shopping
+                Continuer les achats
               </button>
             </div>
           </div>

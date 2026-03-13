@@ -18,41 +18,41 @@ export function HomePage() {
       const response = await productService.getAll({ limit: 6 });
       setFeaturedProducts(response.data.products.slice(0, 6));
     } catch (error) {
-      console.error('Failed to load featured products');
+      console.error('Échec du chargement des produits vedettes');
     } finally {
       setLoading(false);
     }
   };
 
   const categories = [
-    { name: 'Men', icon: '👔', link: '/products?category=men' },
-    { name: 'Women', icon: '👗', link: '/products?category=women' },
-    { name: 'Accessories', icon: '🕶️', link: '/products?category=accessories' },
-    { name: 'Shoes', icon: '👟', link: '/products?category=shoes' },
+    { name: 'Hommes', icon: '👔', link: '/products?category=men' },
+    { name: 'Femmes', icon: '👗', link: '/products?category=women' },
+    { name: 'Accessoires', icon: '🕶️', link: '/products?category=accessories' },
+    { name: 'Chaussures', icon: '👟', link: '/products?category=shoes' },
   ];
 
   return (
     <div>
-      {/* Hero Banner */}
+      {/* Bannière Hero */}
       <section className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-20">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-4">Welcome to MH</h1>
+          <h1 className="text-5xl font-bold mb-4">Bienvenue chez MH</h1>
           <p className="text-xl text-gray-300 mb-8">
-            Discover the latest fashion trends and premium clothing
+            Découvrez les dernières tendances mode et vêtements premium
           </p>
           <button
             onClick={() => navigate('/products')}
             className="bg-white text-gray-900 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition"
           >
-            Shop Now
+            Acheter maintenant
           </button>
         </div>
       </section>
 
-      {/* Categories Section */}
+      {/* Section Catégories */}
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-center">Browse by Category</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">Parcourir par catégorie</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {categories.map(category => (
               <button
@@ -68,12 +68,12 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Featured Products */}
+      {/* Produits vedettes */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8">Featured Products</h2>
+          <h2 className="text-3xl font-bold mb-8">Produits vedettes</h2>
           {loading ? (
-            <div className="text-center py-12">Loading...</div>
+            <div className="text-center py-12">Chargement...</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredProducts.map(product => (
@@ -99,7 +99,7 @@ export function HomePage() {
                         TND {product.price.toFixed(2)}
                       </span>
                       <span className="text-sm px-3 py-1 bg-gray-100 rounded">
-                        {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                        {product.stock > 0 ? 'En stock' : 'Rupture de stock'}
                       </span>
                     </div>
                   </div>
@@ -112,31 +112,31 @@ export function HomePage() {
               onClick={() => navigate('/products')}
               className="bg-gray-900 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition"
             >
-              View All Products
+              Voir tous les produits
             </button>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Section Avantages */}
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-center">Why Choose Us</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">Pourquoi nous choisir</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="text-4xl mb-4">🚚</div>
-              <h3 className="text-xl font-bold mb-2">Free Shipping</h3>
-              <p className="text-gray-600">Free shipping on all orders</p>
+              <h3 className="text-xl font-bold mb-2">Livraison gratuite</h3>
+              <p className="text-gray-600">Livraison offerte sur toutes les commandes</p>
             </div>
             <div className="text-center">
               <div className="text-4xl mb-4">🔒</div>
-              <h3 className="text-xl font-bold mb-2">Secure Payment</h3>
-              <p className="text-gray-600">100% secure payment process</p>
+              <h3 className="text-xl font-bold mb-2">Paiement sécurisé</h3>
+              <p className="text-gray-600">Processus de paiement 100% sécurisé</p>
             </div>
             <div className="text-center">
               <div className="text-4xl mb-4">💬</div>
-              <h3 className="text-xl font-bold mb-2">24/7 Support</h3>
-              <p className="text-gray-600">Dedicated customer support</p>
+              <h3 className="text-xl font-bold mb-2">Support 24/7</h3>
+              <p className="text-gray-600">Service client dédié à votre écoute</p>
             </div>
           </div>
         </div>
