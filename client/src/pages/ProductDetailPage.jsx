@@ -246,7 +246,7 @@ export function ProductDetailPage() {
             disabled={currentVariantStock === 0}
             className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition disabled:opacity-50 font-semibold"
           >
-            {currentVariantStock === 0 ? 'Out of Stock' : 'Add to Cart'}
+            {currentVariantStock === 0 ? 'Out of Stock' : 'Ajouter au panier'}
           </button>
 
           
