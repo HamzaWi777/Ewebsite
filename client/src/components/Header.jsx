@@ -11,7 +11,7 @@ export function Header() {
 
   const handleLogout = () => {
     logout();
-    toast.success('Logged out successfully');
+    toast.success('Déconnexion réussie');
     navigate('/');
   };
 
@@ -30,13 +30,13 @@ export function Header() {
             onClick={() => navigate('/products')}
             className="text-gray-600 hover:text-gray-900 transition"
           >
-            Products
+            Produits
           </button>
           <button 
             onClick={() => navigate('/cart')}
             className="text-gray-600 hover:text-gray-900 transition"
           >
-            Cart
+            Panier
           </button>
           {!isAuthenticated && (
             <>
@@ -44,13 +44,13 @@ export function Header() {
                 onClick={() => navigate('/login')}
                 className="text-gray-600 hover:text-gray-900 transition"
               >
-                Login
+                Connexion
               </button>
               <button 
                 onClick={() => navigate('/register')}
                 className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-800 transition"
               >
-                Register
+                S'inscrire
               </button>
             </>
           )}
@@ -60,7 +60,7 @@ export function Header() {
                 onClick={() => navigate('/my-orders')}
                 className="text-gray-600 hover:text-gray-900 transition"
               >
-                Orders
+                Commandes
               </button>
               {isAdmin && (
                 <button 
@@ -83,7 +83,7 @@ export function Header() {
                       onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-gray-600 hover:bg-gray-100 transition"
                     >
-                      Logout
+                      Déconnexion
                     </button>
                   </div>
                 )}
