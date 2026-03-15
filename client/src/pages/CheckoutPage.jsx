@@ -147,11 +147,11 @@ function CheckoutPageContent() {
               </div>
               <div className="flex justify-between">
                 <span>Shipping:</span>
-                <span className="text-green-600">FREE</span>
+                <span className="text-green-600">8.00 TND</span>
               </div>
               <div className="flex justify-between text-xl font-bold pt-2 border-t border-gray-200">
                 <span>Total:</span>
-                <span>TND {totalPrice.toFixed(2)}</span>
+                <span>TND {(totalPrice + 8.00).toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -188,7 +188,6 @@ function CheckoutPageContent() {
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                    required
                   />
                 </div>
               </>
