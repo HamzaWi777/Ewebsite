@@ -175,7 +175,7 @@ export function CartPage() {
                 </div>
                 <div className="flex justify-between">
                   <span>Livraison :</span>
-                  <span className="text-green-600">GRATUITE</span>
+                  <span className="text-green-600">TND 8.00</span>
                 </div>
               </div>
 

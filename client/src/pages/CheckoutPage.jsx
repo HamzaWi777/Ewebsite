@@ -147,7 +147,7 @@ function CheckoutPageContent() {
               </div>
               <div className="flex justify-between">
                 <span>Shipping:</span>
-                <span className="text-green-600">8.00 TND</span>
+                <span className="text-green-600">TND 8.00</span>
               </div>
               <div className="flex justify-between text-xl font-bold pt-2 border-t border-gray-200">
                 <span>Total:</span>
