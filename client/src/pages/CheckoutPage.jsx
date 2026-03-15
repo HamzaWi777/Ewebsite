@@ -180,7 +180,7 @@ function CheckoutPageContent() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email *
+                    Email (Optionnel)
                   </label>
                   <input
                     type="email"
