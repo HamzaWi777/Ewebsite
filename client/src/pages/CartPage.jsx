@@ -181,7 +181,7 @@ export function CartPage() {
 
               <div className="flex justify-between text-xl font-bold mb-6">
                 <span>Total :</span>
-                <span>TND {totalPrice.toFixed(2)}</span>
+                <span>TND {(totalPrice + 8.00).toFixed(2)}</span>
               </div>
 
               <button
