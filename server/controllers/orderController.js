@@ -44,25 +44,26 @@ export async function createOrder(req, res) {
     const orderId = orderResult.insertId;
 
     // Create order items and reduce product stock
-    for (const item of cartItems) {
-      await pool.query(
-        'INSERT INTO order_items (order_id, product_id, quantity, size, color, price) VALUES (?, ?, ?, ?, ?, ?)',
-        [orderId, item.product_id, item.quantity, item.size, item.color, item.price]
-      );
+for (const item of cartItems) {
+  await pool.query(
+    'INSERT INTO order_items (order_id, product_id, quantity, size, color, price) VALUES (?, ?, ?, ?, ?, ?)',
+    [orderId, item.product_id, item.quantity, item.size, item.color, item.price]
+  );
 
-      // Reduce stock
-      await pool.query(
-        'UPDATE products SET stock = stock - ? WHERE id = ?',
-        [item.quantity, item.product_id]
-      );
-    }
+  // Reduce variant-level stock (size + color specific)
+  if (item.size && item.color) {
+    await pool.query(
+      'UPDATE product_variants SET stock = GREATEST(0, stock - ?) WHERE product_id = ? AND size = ? AND color = ?',
+      [item.quantity, item.product_id, item.size, item.color]
+    );
+  }
 
-    // Clear cart
-    if (userId) {
-      await pool.query('DELETE FROM cart WHERE user_id = ?', [userId]);
-    } else if (guest_session_id) {
-      await pool.query('DELETE FROM cart WHERE guest_session_id = ?', [guest_session_id]);
-    }
+  // Recompute total stock on products table from sum of all variants
+  await pool.query(
+    'UPDATE products SET stock = (SELECT COALESCE(SUM(stock), 0) FROM product_variants WHERE product_id = ?) WHERE id = ?',
+    [item.product_id, item.product_id]
+  );
+}
 
     res.status(201).json({
       message: 'Order created successfully',
