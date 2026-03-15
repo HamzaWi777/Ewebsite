@@ -122,9 +122,9 @@ function CheckoutPageContent() {
                 <div key={item.id} className="flex gap-4 pb-4 border-b border-gray-200 last:border-b-0">
                   {item.images?.[0] && (
                     <img
-                      src={`http://localhost:5000${item.images[0]}`}
+                      src={item.images[0].startsWith('http') ? item.images[0] : `http://localhost:5000${item.images[0]}`}
                       alt={item.name}
-                      className="w-20 h-20 object-cover rounded"
+                      className="w-24 h-24 object-cover rounded"
                     />
                   )}
                   <div className="flex-1">
