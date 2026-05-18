@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { productService } from '../../services';
-import { uploadImageToCloudinary } from '../../utils/imageHelpers';
 
 const DEFAULT_SIZES = ['S', 'M', 'L', 'XL'];
 
@@ -34,20 +33,8 @@ export function AdminProducts() {
     setVariantStock({ ...variantStock, [`${size}_${color}`]: parseInt(value) || 0 });
   };
 
-  const handleFileChange = async (e) => {
-    const files = Array.from(e.target.files);
-    const uploadedImages = [];
-
-    for (const file of files) {
-      try {
-        const uploadedImageUrl = await uploadImageToCloudinary(file);
-        uploadedImages.push(uploadedImageUrl);
-      } catch (error) {
-        toast.error(`Failed to upload image: ${file.name}`);
-      }
-    }
-
-    setImages((prev) => [...prev, ...uploadedImages]);
+  const handleFileChange = (e) => {
+    setImages(prev => [...prev, ...Array.from(e.target.files)]);
     e.target.value = '';
   };
 
@@ -66,21 +53,21 @@ export function AdminProducts() {
     fd.append('price', formData.price);
     fd.append('category', formData.category);
     fd.append('colors', JSON.stringify(colors));
+    fd.append('sizes', JSON.stringify(DEFAULT_SIZES));
     fd.append('variantStock', JSON.stringify(variantStock));
-    fd.append('images', JSON.stringify(images));
-
+    images.forEach(file => fd.append('images', file));
     try {
       if (editingId) {
         await productService.update(editingId, fd);
-        toast.success('Product updated successfully');
+        toast.success('Product updated');
       } else {
         await productService.create(fd);
-        toast.success('Product created successfully');
+        toast.success('Product created');
       }
+      resetForm();
       fetchProducts();
-      setShowForm(false);
     } catch (error) {
-      toast.error('Failed to save product');
+      toast.error(error.response?.data?.error || error.response?.data?.errors?.[0]?.msg || 'Failed to save product');
     }
   };
 
