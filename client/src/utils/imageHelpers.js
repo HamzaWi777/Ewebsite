@@ -1,26 +1,17 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-const API_BASE_URL = API_URL.replace(/\/api\/?$/, '');
+export async function uploadImageToCloudinary(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', 'your_upload_preset'); // Replace with your Cloudinary upload preset
 
-export function getImageUrl(image) {
-  if (!image || typeof image !== 'string') return '';
-  const trimmed = image.trim();
+  const response = await fetch('https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', {
+    method: 'POST',
+    body: formData,
+  });
 
-  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-    try {
-      const parsed = JSON.parse(trimmed);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return getImageUrl(parsed[0]);
-      }
-    } catch (error) {
-      // ignore and fall through
-    }
+  if (!response.ok) {
+    throw new Error('Failed to upload image');
   }
 
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-    return trimmed;
-  }
-  if (trimmed.startsWith('/')) {
-    return `${API_BASE_URL}${trimmed}`;
-  }
-  return `${API_BASE_URL}/${trimmed}`;
+  const data = await response.json();
+  return data.secure_url;
 }
