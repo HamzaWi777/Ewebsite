@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { productService } from '../../services';
+import { uploadImageToCloudinary } from '../../utils/imageHelpers';
 
 const DEFAULT_SIZES = ['S', 'M', 'L', 'XL'];
 
@@ -12,23 +13,8 @@ export function AdminProducts() {
   const [formData, setFormData] = useState({ name: '', description: '', price: '', category: 'men', colors: '' });
   const [variantStock, setVariantStock] = useState({});
   const [images, setImages] = useState([]);
-  const [previewUrls, setPreviewUrls] = useState([]);
 
   useEffect(() => { fetchProducts(); }, []);
-
-  useEffect(() => {
-    if (images.length === 0) {
-      setPreviewUrls([]);
-      return;
-    }
-
-    const urls = images.map(file => URL.createObjectURL(file));
-    setPreviewUrls(urls);
-
-    return () => {
-      urls.forEach(url => URL.revokeObjectURL(url));
-    };
-  }, [images]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -48,17 +34,20 @@ export function AdminProducts() {
     setVariantStock({ ...variantStock, [`${size}_${color}`]: parseInt(value) || 0 });
   };
 
-  const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    const remainingSlots = 5 - images.length;
-    const allowedFiles = selectedFiles.slice(0, remainingSlots);
+  const handleFileChange = async (e) => {
+    const files = Array.from(e.target.files);
+    const uploadedImages = [];
 
-    if (allowedFiles.length === 0) {
-      e.target.value = '';
-      return;
+    for (const file of files) {
+      try {
+        const uploadedImageUrl = await uploadImageToCloudinary(file);
+        uploadedImages.push(uploadedImageUrl);
+      } catch (error) {
+        toast.error(`Failed to upload image: ${file.name}`);
+      }
     }
 
-    setImages(prev => [...prev, ...allowedFiles]);
+    setImages((prev) => [...prev, ...uploadedImages]);
     e.target.value = '';
   };
 
@@ -77,21 +66,21 @@ export function AdminProducts() {
     fd.append('price', formData.price);
     fd.append('category', formData.category);
     fd.append('colors', JSON.stringify(colors));
-    fd.append('sizes', JSON.stringify(DEFAULT_SIZES));
     fd.append('variantStock', JSON.stringify(variantStock));
-    images.forEach(file => fd.append('images', file));
+    fd.append('images', JSON.stringify(images));
+
     try {
       if (editingId) {
         await productService.update(editingId, fd);
-        toast.success('Product updated');
+        toast.success('Product updated successfully');
       } else {
         await productService.create(fd);
-        toast.success('Product created');
+        toast.success('Product created successfully');
       }
-      resetForm();
       fetchProducts();
+      setShowForm(false);
     } catch (error) {
-      toast.error(error.response?.data?.error || error.response?.data?.errors?.[0]?.msg || 'Failed to save product');
+      toast.error('Failed to save product');
     }
   };
 
@@ -221,24 +210,8 @@ export function AdminProducts() {
             {/* Images */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Images (up to 5)</label>
-              <input type="file" accept="image/*" multiple onChange={handleFileChange} disabled={images.length >= 5}
+              <input type="file" accept="image/*" onChange={handleFileChange} disabled={images.length >= 5}
                 className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent" />
-              {previewUrls.length > 0 && (
-                <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {previewUrls.map((url, idx) => (
-                    <div key={idx} className="relative border border-gray-200 rounded overflow-hidden">
-                      <img src={url} alt={`Preview ${idx + 1}`} className="h-24 w-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => removeImage(idx)}
-                        className="absolute top-1 right-1 bg-white bg-opacity-80 rounded-full p-1 text-red-600 hover:text-red-800"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
               {images.length > 0 && (
                 <div className="mt-2 space-y-1">
                   {images.map((file, idx) => (
