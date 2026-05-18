@@ -12,8 +12,23 @@ export function AdminProducts() {
   const [formData, setFormData] = useState({ name: '', description: '', price: '', category: 'men', colors: '' });
   const [variantStock, setVariantStock] = useState({});
   const [images, setImages] = useState([]);
+  const [previewUrls, setPreviewUrls] = useState([]);
 
   useEffect(() => { fetchProducts(); }, []);
+
+  useEffect(() => {
+    if (images.length === 0) {
+      setPreviewUrls([]);
+      return;
+    }
+
+    const urls = images.map(file => URL.createObjectURL(file));
+    setPreviewUrls(urls);
+
+    return () => {
+      urls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [images]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -34,7 +49,16 @@ export function AdminProducts() {
   };
 
   const handleFileChange = (e) => {
-    setImages(prev => [...prev, ...Array.from(e.target.files)]);
+    const selectedFiles = Array.from(e.target.files);
+    const remainingSlots = 5 - images.length;
+    const allowedFiles = selectedFiles.slice(0, remainingSlots);
+
+    if (allowedFiles.length === 0) {
+      e.target.value = '';
+      return;
+    }
+
+    setImages(prev => [...prev, ...allowedFiles]);
     e.target.value = '';
   };
 
@@ -197,8 +221,24 @@ export function AdminProducts() {
             {/* Images */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Images (up to 5)</label>
-              <input type="file" accept="image/*" onChange={handleFileChange} disabled={images.length >= 5}
+              <input type="file" accept="image/*" multiple onChange={handleFileChange} disabled={images.length >= 5}
                 className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent" />
+              {previewUrls.length > 0 && (
+                <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {previewUrls.map((url, idx) => (
+                    <div key={idx} className="relative border border-gray-200 rounded overflow-hidden">
+                      <img src={url} alt={`Preview ${idx + 1}`} className="h-24 w-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(idx)}
+                        className="absolute top-1 right-1 bg-white bg-opacity-80 rounded-full p-1 text-red-600 hover:text-red-800"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
               {images.length > 0 && (
                 <div className="mt-2 space-y-1">
                   {images.map((file, idx) => (
