@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { productService } from '../services';
+import { getImageUrl } from '../utils/imageHelpers';
 
 export function ProductsPage() {
   const navigate = useNavigate();
@@ -181,9 +182,9 @@ export function ProductsPage() {
                     onClick={() => navigate(`/product/${product.id}`)}
                     className="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition cursor-pointer"
                   >
-                    {product.images[0] && (
+                    {product.images?.[0] && (
                       <img
-                        src={product.images[0].startsWith('http') ? product.images[0] : `http://localhost:5000${product.images[0]}`}
+                        src={getImageUrl(product.images[0])}
                         alt={product.name}
                         className="w-full h-44 sm:h-64 md:h-[450px] object-cover"
                       />

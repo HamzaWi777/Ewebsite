@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { cartService } from '../services';
 import { useAuth } from '../context/AuthContext';
+import { getImageUrl } from '../utils/imageHelpers';
 import { 
   getGuestCart, 
   updateGuestCartItem, 
@@ -104,9 +105,9 @@ export function CartPage() {
                   key={item.id}
                   className="bg-white p-4 rounded-lg shadow flex gap-4"
                 >
-                  {item.images[0] && (
+                  {item.images?.[0] && (
                     <img
-                      src={item.images[0].startsWith('http') ? item.images[0] : `http://localhost:5000${item.images[0]}`}
+                      src={getImageUrl(item.images[0])}
                       alt={item.name}
                       className="w-24 h-24 object-cover rounded"
                     />

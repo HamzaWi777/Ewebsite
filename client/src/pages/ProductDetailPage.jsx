@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { productService, cartService } from '../services';
 import { useAuth } from '../context/AuthContext';
 import { addToGuestCart, getOrCreateGuestSessionId } from '../utils/guestCart';
+import { getImageUrl } from '../utils/imageHelpers';
 
 export function ProductDetailPage() {
   const { id } = useParams();
@@ -62,7 +63,6 @@ export function ProductDetailPage() {
   };
 
   const currentVariantStock = product ? getVariantStock() : 0;
-  const imgSrc = (img) => img.startsWith('http') ? img : `http://localhost:5000${img}`;
 
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   if (!product) return <div className="flex items-center justify-center min-h-screen">Product not found</div>;
@@ -84,7 +84,7 @@ export function ProductDetailPage() {
             <>
               {/* Main image */}
               <img
-                src={imgSrc(product.images[currentImageIndex])}
+                src={getImageUrl(product.images[currentImageIndex])}
                 alt={product.name}
                 className="w-full h-72 sm:h-[480px] md:h-[800px] object-cover rounded-lg mb-3 md:mb-4"
               />
