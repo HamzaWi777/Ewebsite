@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { orderService } from '../services';
 import { PrivateRoute } from '../components/ProtectedRoute';
-import { getImageUrl } from '../utils/imageHelpers';
 
 function MyOrdersPageContent() {
   const navigate = useNavigate();
@@ -142,9 +141,9 @@ function MyOrdersPageContent() {
                         key={item.id}
                         className="flex gap-4 pb-4 border-b border-gray-200 last:border-b-0"
                       >
-                        {item.images?.[0] && (
+                        {item.images[0] && (
                           <img
-                            src={getImageUrl(item.images[0])}
+                            src={`http://localhost:5000${item.images[0]}`}
                             alt={item.name}
                             className="w-20 h-20 object-cover rounded"
                           />

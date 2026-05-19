@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { cartService } from '../services';
 import { useAuth } from '../context/AuthContext';
-import { getImageUrl } from '../utils/imageHelpers';
 import { 
   getGuestCart, 
   updateGuestCartItem, 
@@ -32,7 +31,7 @@ export function CartPage() {
         setCartItems(response.data);
       }
     } catch (error) {
-      toast.error('Échec du chargement du panier');
+      toast.error('Failed to load cart');
     } finally {
       setLoading(false);
     }
@@ -51,9 +50,9 @@ export function CartPage() {
           item.id === itemId ? { ...item, quantity: newQuantity } : item
         ));
       }
-      toast.success('Panier mis à jour');
+      toast.success('Cart updated');
     } catch (error) {
-      toast.error('Échec de la mise à jour du panier');
+      toast.error('Failed to update cart');
     }
   };
 
@@ -66,9 +65,9 @@ export function CartPage() {
         await cartService.removeFromCart(itemId);
         setCartItems(cartItems.filter(item => item.id !== itemId));
       }
-      toast.success('Article retiré du panier');
+      toast.success('Item removed from cart');
     } catch (error) {
-      toast.error("Échec de la suppression de l'article");
+      toast.error('Failed to remove item');
     }
   };
 
@@ -78,26 +77,26 @@ export function CartPage() {
   }, 0);
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Chargement...</div>;
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Panier</h1>
+      <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
 
       {cartItems.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-600 mb-4">Votre panier est vide</p>
+          <p className="text-gray-600 mb-4">Your cart is empty</p>
           <button
             onClick={() => navigate('/products')}
             className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800 transition"
           >
-            Continuer les achats
+            Continue Shopping
           </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Articles du panier */}
+          {/* Cart Items */}
           <div className="lg:col-span-2">
             <div className="space-y-4">
               {cartItems.map(item => (
@@ -105,9 +104,9 @@ export function CartPage() {
                   key={item.id}
                   className="bg-white p-4 rounded-lg shadow flex gap-4"
                 >
-                  {item.images?.[0] && (
+                  {item.images[0] && (
                     <img
-                      src={getImageUrl(item.images[0])}
+                      src={`http://localhost:5000${item.images[0]}`}
                       alt={item.name}
                       className="w-24 h-24 object-cover rounded"
                     />
@@ -116,10 +115,10 @@ export function CartPage() {
                   <div className="flex-1">
                     <h3 className="font-semibold text-lg">{item.name}</h3>
                     <p className="text-sm text-gray-600">
-                      Taille : {item.size} | Couleur : {item.color}
+                      Size: {item.size} | Color: {item.color}
                     </p>
                     <p className="text-lg font-bold mt-2">
-                      TND {(typeof item.price === 'string' ? parseFloat(item.price) : item.price).toFixed(2)}
+                      ${(typeof item.price === 'string' ? parseFloat(item.price) : item.price).toFixed(2)}
                     </p>
 
                     <div className="flex items-center gap-4 mt-4">
@@ -149,14 +148,14 @@ export function CartPage() {
                         onClick={() => handleRemoveItem(item.id)}
                         className="text-red-600 hover:text-red-800 font-semibold ml-auto"
                       >
-                        Supprimer
+                        Remove
                       </button>
                     </div>
                   </div>
 
                   <div className="text-right">
                     <p className="text-lg font-bold">
-                      TND {((typeof item.price === 'string' ? parseFloat(item.price) : item.price) * item.quantity).toFixed(2)}
+                      ${((typeof item.price === 'string' ? parseFloat(item.price) : item.price) * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -164,39 +163,39 @@ export function CartPage() {
             </div>
           </div>
 
-          {/* Récapitulatif de commande */}
+          {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-bold mb-4">Récapitulatif</h2>
+              <h2 className="text-xl font-bold mb-4">Order Summary</h2>
 
               <div className="space-y-2 mb-4 pb-4 border-b border-gray-200">
                 <div className="flex justify-between">
-                  <span>Sous-total :</span>
-                  <span>TND {totalPrice.toFixed(2)}</span>
+                  <span>Subtotal:</span>
+                  <span>${totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Livraison :</span>
-                  <span className="text-green-600">TND 8.00</span>
+                  <span>Shipping:</span>
+                  <span className="text-green-600">FREE</span>
                 </div>
               </div>
 
               <div className="flex justify-between text-xl font-bold mb-6">
-                <span>Total :</span>
-                <span>TND {(totalPrice + 8.00).toFixed(2)}</span>
+                <span>Total:</span>
+                <span>${totalPrice.toFixed(2)}</span>
               </div>
 
               <button
                 onClick={() => navigate('/checkout')}
                 className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition font-semibold"
               >
-                Passer la commande
+                Proceed to Checkout
               </button>
 
               <button
                 onClick={() => navigate('/products')}
                 className="w-full mt-2 border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition"
               >
-                Continuer les achats
+                Continue Shopping
               </button>
             </div>
           </div>
