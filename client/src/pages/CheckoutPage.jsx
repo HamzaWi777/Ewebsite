@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { cartService, orderService } from '../services';
 import { useAuth } from '../context/AuthContext';
 import { governorates } from '../constants/governorates';
+
 function CheckoutPageContent() {
   const navigate = useNavigate();
   const { user } = useAuth();
