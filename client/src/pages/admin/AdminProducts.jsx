@@ -15,6 +15,12 @@ export function AdminProducts() {
 
   useEffect(() => { fetchProducts(); }, []);
 
+  useEffect(() => {
+    return () => {
+      images.forEach((image) => URL.revokeObjectURL(image.preview));
+    };
+  }, [images]);
+
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -34,11 +40,23 @@ export function AdminProducts() {
   };
 
   const handleFileChange = (e) => {
-    setImages(prev => [...prev, ...Array.from(e.target.files)]);
+    const selectedFiles = Array.from(e.target.files).map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setImages((prev) => [...prev, ...selectedFiles]);
     e.target.value = '';
   };
 
-  const removeImage = (index) => setImages(prev => prev.filter((_, i) => i !== index));
+  const removeImage = (index) => {
+    setImages((prev) => {
+      const removed = prev[index];
+      if (removed) {
+        URL.revokeObjectURL(removed.preview);
+      }
+      return prev.filter((_, i) => i !== index);
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +73,7 @@ export function AdminProducts() {
     fd.append('colors', JSON.stringify(colors));
     fd.append('sizes', JSON.stringify(DEFAULT_SIZES));
     fd.append('variantStock', JSON.stringify(variantStock));
-    images.forEach(file => fd.append('images', file));
+    images.forEach((image) => fd.append('images', image.file));
     try {
       if (editingId) {
         await productService.update(editingId, fd);
@@ -200,14 +218,30 @@ export function AdminProducts() {
               <input type="file" accept="image/*" onChange={handleFileChange} disabled={images.length >= 5}
                 className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent" />
               {images.length > 0 && (
-                <div className="mt-2 space-y-1">
-                  {images.map((file, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded">
-                      <span className="truncate mr-2">{idx + 1}. {file.name}</span>
-                      <button type="button" onClick={() => removeImage(idx)} className="text-red-500 hover:text-red-700 flex-shrink-0">✕</button>
-                    </div>
-                  ))}
-                </div>
+                <>
+                  <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {images.map((image, idx) => (
+                      <div key={idx} className="relative rounded overflow-hidden border border-gray-200">
+                        <img src={image.preview} alt={`preview-${idx}`} className="w-full h-24 object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => removeImage(idx)}
+                          className="absolute top-1 right-1 bg-white bg-opacity-90 rounded-full p-1 text-red-600 hover:text-red-800"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-2 space-y-1">
+                    {images.map((image, idx) => (
+                      <div key={`name-${idx}`} className="flex items-center justify-between text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded">
+                        <span className="truncate mr-2">{idx + 1}. {image.file.name}</span>
+                        <button type="button" onClick={() => removeImage(idx)} className="text-red-500 hover:text-red-700 flex-shrink-0">✕</button>
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
 
