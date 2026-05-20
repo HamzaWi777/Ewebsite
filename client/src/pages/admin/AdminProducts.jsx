@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { productService } from '../../services';
 
-const DEFAULT_SIZES = ['S', 'M', 'L', 'XL'];
+const DEFAULT_SIZES = ['36', '38', '40', '42', '44', '46', '48', '50'];
 
 export function AdminProducts() {
   const [products, setProducts] = useState([]);

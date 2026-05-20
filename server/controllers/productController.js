@@ -280,12 +280,12 @@ export async function createProduct(req, res) {
     }
 
     // Parse sizes if it's a JSON string
-    let parsedSizes = ['S', 'M', 'L', 'XL'];
+    let parsedSizes = ['36', '38', '40', '42', '44', '46', '48', '50'];
     if (sizes) {
       try {
         parsedSizes = typeof sizes === 'string' ? JSON.parse(sizes) : sizes;
       } catch (e) {
-        parsedSizes = ['S', 'M', 'L', 'XL'];
+        parsedSizes = ['36', '38', '40', '42', '44', '46', '48', '50'];
       }
     }
 
@@ -365,12 +365,12 @@ export async function updateProduct(req, res) {
     }
 
     // Parse sizes if it's a JSON string
-    let parsedSizes = ['S', 'M', 'L', 'XL'];
+    let parsedSizes = ['36', '38', '40', '42', '44', '46', '48', '50'];
     if (sizes) {
       try {
         parsedSizes = typeof sizes === 'string' ? JSON.parse(sizes) : sizes;
       } catch (e) {
-        parsedSizes = ['S', 'M', 'L', 'XL'];
+        parsedSizes = ['36', '38', '40', '42', '44', '46', '48', '50'];
       }
     }
 
