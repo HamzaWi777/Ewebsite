@@ -4,7 +4,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h3 className="text-lg font-bold mb-4">StyleStore</h3>
+            <h3 className="text-lg font-bold mb-4">MH-Studio</h3>
             <p className="text-gray-400">
               Votre destination pour la mode et les vêtements premium.
             </p>
@@ -59,7 +59,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
-          <p>&copy; 2025 StyleStore. Tous droits réservés.</p>
+          <p>&copy; 2025 MH-Studio. Tous droits réservés.</p>
         </div>
       </div>
     </footer>
