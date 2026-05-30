@@ -214,8 +214,8 @@ export function AdminProducts() {
 
             {/* Images */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Images (up to 5)</label>
-              <input type="file" accept="image/*" onChange={handleFileChange} disabled={images.length >= 5}
+              <label className="block text-sm font-medium text-gray-700 mb-1">Images (up to 15)</label>
+              <input type="file" accept="image/*" onChange={handleFileChange} disabled={images.length >= 15}
                 className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent" />
               {images.length > 0 && (
                 <>
