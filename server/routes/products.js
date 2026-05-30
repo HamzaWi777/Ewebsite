@@ -11,8 +11,8 @@ router.get('/', validateProductFilters, validate, productController.getAllProduc
 router.get('/:id', productController.getProductById);
 
 // Admin routes
-router.post('/', verifyAdmin, uploadMiddleware.array('images', 5), validateProduct, validate, productController.createProduct);
-router.put('/:id', verifyAdmin, uploadMiddleware.array('images', 5), validateProduct, validate, productController.updateProduct);
+router.post('/', verifyAdmin, uploadMiddleware.array('images', 15), validateProduct, validate, productController.createProduct);
+router.put('/:id', verifyAdmin, uploadMiddleware.array('images', 15), validateProduct, validate, productController.updateProduct);
 router.delete('/:id', verifyAdmin, productController.deleteProduct);
 
 export default router;
