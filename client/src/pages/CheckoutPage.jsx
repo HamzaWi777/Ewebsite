@@ -116,7 +116,7 @@ function CheckoutPageContent() {
         {/* Order Summary */}
         <div className="lg:col-span-2">
           <div className="bg-white p-6 rounded-lg shadow mb-6">
-            <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+            <h2 className="text-xl font-bold mb-4">Récapitulatif de commande</h2>
             <div className="space-y-4">
               {cartItems.map(item => (
                 <div key={item.id} className="flex gap-4 pb-4 border-b border-gray-200 last:border-b-0">
@@ -142,11 +142,11 @@ function CheckoutPageContent() {
 
             <div className="space-y-2 mt-6">
               <div className="flex justify-between">
-                <span>Subtotal:</span>
+                <span>Sous-total:</span>
                 <span>TND {totalPrice.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Shipping:</span>
+                <span>Livraison:</span>
                 <span className="text-green-600">TND 8.00</span>
               </div>
               <div className="flex justify-between text-xl font-bold pt-2 border-t border-gray-200">
