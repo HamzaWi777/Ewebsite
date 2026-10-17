@@ -270,7 +270,7 @@ function CheckoutPageContent() {
               disabled={submitting}
               className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition disabled:opacity-50 font-semibold text-lg"
             >
-              {submitting ? 'Placing Order...' : 'confirmer la commande'}
+              {submitting ? 'Placing Order...' : 'Confirmer la commande'}
             </button>
 
             <button
