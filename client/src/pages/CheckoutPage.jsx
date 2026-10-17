@@ -166,7 +166,7 @@ function CheckoutPageContent() {
               <>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Full Name *
+                    Nom *
                   </label>
                   <input
                     type="text"
@@ -207,7 +207,7 @@ function CheckoutPageContent() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number *
+                Numéro de téléphone *
               </label>
               <input
                 type="tel"
@@ -270,7 +270,7 @@ function CheckoutPageContent() {
               disabled={submitting}
               className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition disabled:opacity-50 font-semibold text-lg"
             >
-              {submitting ? 'Placing Order...' : 'Confirm Order'}
+              {submitting ? 'Placing Order...' : 'confirmer la commande'}
             </button>
 
             <button
@@ -278,7 +278,7 @@ function CheckoutPageContent() {
               onClick={() => navigate('/cart')}
               className="w-full border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition"
             >
-              Back to Cart
+              Retour au panier
             </button>
           </form>
         </div>
