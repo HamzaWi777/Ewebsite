@@ -159,7 +159,7 @@ function CheckoutPageContent() {
 
         {/* Checkout Form */}
         <div className="bg-white p-6 rounded-lg shadow h-fit">
-          <h2 className="text-2xl font-bold mb-6">Shipping Information</h2>
+          <h2 className="text-2xl font-bold mb-6">Informations de livraison</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {isGuest ? (
@@ -194,7 +194,7 @@ function CheckoutPageContent() {
             ) : (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
+                  Nom
                 </label>
                 <input
                   type="text"
@@ -221,7 +221,7 @@ function CheckoutPageContent() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address *
+                Adresse de livraison *
               </label>
               <textarea
                 name="shipping_address"
